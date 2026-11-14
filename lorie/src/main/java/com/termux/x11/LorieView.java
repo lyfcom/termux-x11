@@ -682,11 +682,15 @@ public class LorieView extends FrameLayout implements InputStub {
     @Override
     public boolean dispatchKeyEventPreIme(KeyEvent event) {
         if (imeBuggyKeys.contains(event.getKeyCode())) {
-            // IME does not handle/send events for some keys correctly correctly.
+            // A new press must cancel the previous release fallback before it can
+            // release a key that is now held down again.
+            keyReleaseHandler.removeMessages(event.getKeyCode());
+
+            // IME does not handle/send events for some keys correctly.
             // So we should send key release manually in the case if IME will not send it...
             // I.e. in the case of CTRL+Backspace IME does not send Backspace release event.
-            int action = event.getAction();
-            if (action == KeyEvent.ACTION_UP)
+            // No fallback is needed when we handle the event before the IME.
+            if (hardwareKbdScancodesWorkaround && event.getAction() == KeyEvent.ACTION_UP)
                 keyReleaseHandler.sendEmptyMessageDelayed(event.getKeyCode(), 50);
         }
 

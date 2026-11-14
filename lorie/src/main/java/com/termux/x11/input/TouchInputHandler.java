@@ -383,8 +383,9 @@ public class TouchInputHandler {
                     break;
 
                 case MotionEvent.ACTION_SCROLL:
-                    float scrollY = -100 * event.getAxisValue(MotionEvent.AXIS_VSCROLL);
-                    float scrollX = -100 * event.getAxisValue(MotionEvent.AXIS_HSCROLL);
+                    // The server uses 120 wheel units per X11 scroll increment.
+                    float scrollY = -120 * event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+                    float scrollX = -120 * event.getAxisValue(MotionEvent.AXIS_HSCROLL);
 
                     mInjector.sendMouseWheelEvent(scrollX, scrollY);
                     return true;
@@ -1014,8 +1015,9 @@ public class TouchInputHandler {
         @SuppressLint("ClickableViewAccessibility")
         boolean onTouch(View v, MotionEvent e) {
             if (e.getAction() == MotionEvent.ACTION_SCROLL) {
-                float scrollY = -100 * e.getAxisValue(MotionEvent.AXIS_VSCROLL);
-                float scrollX = -100 * e.getAxisValue(MotionEvent.AXIS_HSCROLL);
+                // The server uses 120 wheel units per X11 scroll increment.
+                float scrollY = -120 * e.getAxisValue(MotionEvent.AXIS_VSCROLL);
+                float scrollX = -120 * e.getAxisValue(MotionEvent.AXIS_HSCROLL);
 
                 mInjector.sendMouseWheelEvent(scrollX, scrollY);
                 return true;
