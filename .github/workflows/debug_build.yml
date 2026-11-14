@@ -44,7 +44,7 @@ jobs:
       - name: Fetch native dependencies
         run: git submodule update --init --recursive --jobs 8 --depth 1
       - name: Install Android build tools
-        run: sdkmanager 'platforms;android-34' 'build-tools;36.0.0' 'ndk;29.0.14206865' 'cmake;3.22.1'
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-34" "build-tools;36.0.0" "ndk;29.0.14206865" "cmake;3.22.1"'
       - name: Build pull request with upstream test key
         if: github.event_name == 'pull_request'
         run: ./gradlew --no-daemon :lorie-app:assembleStandaloneDebug :shell-loader:buildCompanionPackage
