@@ -27,6 +27,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Rational;
 import android.view.Choreographer;
+import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.Display;
 import android.view.Surface;
@@ -406,6 +407,11 @@ public class LorieView extends FrameLayout implements InputStub {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Ordinary mice use POINTER; captured relative mice use TRACKBALL.
+            // Request after attachment so Android 11-13 also apply it immediately.
+            requestUnbufferedDispatch(InputDevice.SOURCE_CLASS_POINTER | InputDevice.SOURCE_CLASS_TRACKBALL);
+        }
         Choreographer.getInstance().postFrameCallback(cursorPlacer);
     }
 
