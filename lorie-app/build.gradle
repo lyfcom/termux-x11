@@ -44,11 +44,28 @@ android {
         }
     }
 
+    // CI supplies the private signing key only on push/manual builds.
+    // Pull requests and local builds retain the upstream untrusted test key.
+    def privateStore = System.getenv('X11_KEYSTORE_PATH')
+    if (System.getenv('X11_REQUIRE_SIGNING') == 'true' && !privateStore)
+        throw new GradleException('Private signing was requested but X11_KEYSTORE_PATH is missing')
     signingConfigs.debug {
-        storeFile file('testkey_untrusted.jks')
-        keyAlias 'alias'
-        storePassword 'xrj45yWGLbsO7W0v'
-        keyPassword 'xrj45yWGLbsO7W0v'
+        if (privateStore) {
+            ['X11_KEYSTORE_PASSWORD', 'X11_KEY_ALIAS', 'X11_KEY_PASSWORD'].each { name ->
+                if (!System.getenv(name))
+                    throw new GradleException("Missing signing environment variable: ${name}")
+            }
+            storeFile rootProject.file(privateStore)
+            storeType 'PKCS12'
+            keyAlias System.getenv('X11_KEY_ALIAS')
+            storePassword System.getenv('X11_KEYSTORE_PASSWORD')
+            keyPassword System.getenv('X11_KEY_PASSWORD')
+        } else {
+            storeFile file('testkey_untrusted.jks')
+            keyAlias 'alias'
+            storePassword 'xrj45yWGLbsO7W0v'
+            keyPassword 'xrj45yWGLbsO7W0v'
+        }
     }
 
     compileOptions.sourceCompatibility JavaVersion.VERSION_1_9

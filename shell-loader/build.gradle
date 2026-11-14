@@ -25,7 +25,7 @@ configurations.configureEach { exclude group: "org.jetbrains.kotlin", module: "k
 
 def signingConfig = project(':lorie-app').android.signingConfigs.debug
 def keyStore = java.security.KeyStore.getInstance(java.security.KeyStore.getDefaultType())
-keyStore.load(new FileInputStream(signingConfig.storeFile), signingConfig.keyPassword.toCharArray())
+keyStore.load(new FileInputStream(signingConfig.storeFile), signingConfig.storePassword.toCharArray())
 
 ext.targetApplicationId = "com.termux.x11"
 ext.embeddedApplicationId = "com.termux"
