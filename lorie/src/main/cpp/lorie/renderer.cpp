@@ -269,6 +269,9 @@ bool Renderer::initGl() {
 
     if (eglMakeCurrent(egl_display, sfc, sfc, ctx) != EGL_TRUE)
         return printEglError("eglMakeCurrent failed", __LINE__);
+    log("Xlorie: EGL vendor: %s", eglQueryString(egl_display, EGL_VENDOR));
+    log("Xlorie: GL renderer: %s", glGetString(GL_RENDERER));
+    log("Xlorie: GL version: %s", glGetString(GL_VERSION));
     eglSwapInterval(egl_display, 0);
 
     g_texture_program = createProgram(vertexShaderSrc, fragmentShaderSrc);

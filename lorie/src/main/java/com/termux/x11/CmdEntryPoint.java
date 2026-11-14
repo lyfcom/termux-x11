@@ -159,7 +159,7 @@ public class CmdEntryPoint extends ICmdEntryInterface.Stub {
             // Hiding harmless framework errors, like this:
             // java.io.FileNotFoundException: /data/system/theme_config/theme_compatibility.xml: open failed: ENOENT (No such file or directory)
             System.setErr(new PrintStream(new OutputStream() { public void write(int arg0) {} }));
-            if (System.getenv("OLD_CONTEXT") != null) {
+            if (System.getenv("OLD_CONTEXT") != null || GraphicsBackend.wantsAngle()) {
                 context = android.app.ActivityThread.systemMain().getSystemContext();
             } else {
                 context = ((android.app.ActivityThread) Class.
@@ -197,6 +197,7 @@ public class CmdEntryPoint extends ICmdEntryInterface.Stub {
 
     private static void initEntryPoint() {
         ctx = createContext();
+        GraphicsBackend.configure(ctx);
 
         String path = "lib/" + (android.os.Process.is64Bit() ? Build.SUPPORTED_64_BIT_ABIS[0] : Build.SUPPORTED_32_BIT_ABIS[0]) + "/libXlorie.so";
         ClassLoader loader = CmdEntryPoint.class.getClassLoader();
